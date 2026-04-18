@@ -1,0 +1,48 @@
+name: branch-audit
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'eml-skill/skills/_shared/eml_core/witnesses.py'
+      - 'eml-skill/skills/_shared/eml_core/branch.py'
+      - 'eml-skill/skills/_shared/eml_core/domain.py'
+      - 'eml-skill/skills/_shared/eml_core/optimize.py'
+      - 'eml-skill/skills/eml-check/scripts/audit.py'
+  push:
+    branches:
+      - main
+    paths:
+      - 'eml-skill/skills/_shared/eml_core/witnesses.py'
+      - 'eml-skill/skills/_shared/eml_core/branch.py'
+      - 'eml-skill/skills/_shared/eml_core/domain.py'
+      - 'eml-skill/skills/_shared/eml_core/optimize.py'
+      - 'eml-skill/skills/eml-check/scripts/audit.py'
+  workflow_dispatch:
+
+jobs:
+  branch-cut-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Audit every witness tree on its canonical domain
+        run: |
+          PYTHONPATH=eml-skill/skills/_shared pytest \
+            eml-skill/skills/_shared/eml_core/tests/test_witnesses.py::test_stored_trees_numerically_match_claims \
+            -v

@@ -1,0 +1,25 @@
+{
+  "name": "eml-skill-marketplace",
+  "owner": {
+    "name": "Yaniv Golan",
+    "email": "yaniv@golan.name"
+  },
+  "metadata": {
+    "description": "Five Agent Skills plus a shared Python core for the EML operator from arXiv:2603.21852 — compile ordinary math into EML trees, verify witnesses against named claims with branch-cut probes, search for shorter trees, fit elementary laws from data, and numerically check identities.",
+    "version": "0.1.0",
+    "pluginRoot": "./eml-skill"
+  },
+  "plugins": [
+    {
+      "name": "eml-skill",
+      "source": "./eml-skill",
+      "description": "Five Agent Skills plus a shared Python core for the EML operator from arXiv:2603.21852 — compile ordinary math into EML trees, verify witnesses against named claims with branch-cut probes, search for shorter trees, fit elementary laws from data, and numerically check identities.",
+      "author": {
+        "name": "Yaniv Golan",
+        "email": "yaniv@golan.name"
+      },
+      "category": "math",
+      "tags": ["eml", "symbolic-regression", "elementary-functions", "branch-cuts", "sympy", "math", "proof-verification", "agent-skills"]
+    }
+  ]
+}

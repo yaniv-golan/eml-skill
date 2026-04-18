@@ -1,0 +1,30 @@
+# private / project-local
+docs/internal/
+docs/demo-assets/run/
+docs/demo-assets/demo.html
+CLAUDE.md
+eml-skill/skills/*-workspace/
+.claude/
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
+
+# environment
+.env
+.env.*
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/
+

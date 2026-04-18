@@ -1,0 +1,29 @@
+name: leaderboard-drift
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'eml-skill/skills/_shared/eml_core/witnesses.py'
+      - 'eml-skill/skills/eml-optimize/scripts/leaderboard.py'
+      - 'docs/leaderboard.md'
+  push:
+    branches:
+      - main
+
+jobs:
+  check-leaderboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check leaderboard is in sync with witnesses.py
+        run: |
+          PYTHONPATH=eml-skill/skills/_shared python eml-skill/skills/eml-optimize/scripts/leaderboard.py --check --out docs/leaderboard.md

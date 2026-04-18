@@ -1,0 +1,60 @@
+{
+  "skill_name": "eml-check",
+  "evals": [
+    {
+      "id": 0,
+      "name": "verify-exp-k3",
+      "prompt": "I have an EML tree written as `eml(x, 1)` and I'm claiming it's the witness for exp(x) — the K=3 canonical one. Can you audit it? Tell me whether the leaves are in the allowed set {1, x, y}, what K and tree depth come out to, sample the function on a reasonable interior domain and compare against math.exp / cmath.exp, and give me a verdict. Please save the structured audit to audit.json and a short markdown report to audit.md in the current working directory. Use cmath for evaluation, not math — this matters.",
+      "expected_output": "audit.json with verdict='verified', K=3, depth=1, leaves={'1': 1, 'x': 1}, max_abs_diff near machine epsilon. audit.md summarizing the same in human-readable form.",
+      "files": [],
+      "assertions": [
+        {"name": "audit_json_exists", "description": "audit.json is present in outputs/"},
+        {"name": "audit_md_exists", "description": "audit.md is present in outputs/"},
+        {"name": "audit_json_valid", "description": "audit.json parses as valid JSON"},
+        {"name": "verdict_is_verified", "description": "audit.json.verdict is 'verified' (or 'verified-with-caveats'); not 'numerical-mismatch' or 'shape-invalid'"},
+        {"name": "K_equals_3", "description": "Reported K is 3"},
+        {"name": "depth_equals_1", "description": "Reported tree depth is 1"},
+        {"name": "leaves_are_clean", "description": "Leaf audit reports only leaves in {1, x, y}; no violations"},
+        {"name": "numerical_agreement_tight", "description": "max_abs_diff is below 1e-10 (machine-epsilon territory)"},
+        {"name": "used_cmath", "description": "Transcript or implementation mentions cmath (not math) for reference evaluation, as the prompt required"},
+        {"name": "samples_interior_domain", "description": "Evaluation sampled a non-trivial interior domain (≥10 points), not just one spot-check"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "verify-ln-with-branch-caveat",
+      "prompt": "Please audit this EML tree: `eml(1, eml(eml(1, x), 1))`. I'm claiming it's the K=7 witness for ln(x). Confirm the shape, check the leaf alphabet, evaluate numerically on a sensible domain, and importantly — probe near the branch cut on the negative real axis because ln has a principal-branch issue there. Flag any branch-cut concerns explicitly. Save audit.json and audit.md to the current working directory. Use cmath (principal branch) for the reference ln.",
+      "expected_output": "audit.json with verdict='verified' or 'verified-with-caveats', K=7, depth=3, caveats mentioning principal branch / positive-real domain, branch_flags array present. audit.md explains the domain restriction.",
+      "files": [],
+      "assertions": [
+        {"name": "audit_json_exists", "description": "audit.json is present in outputs/"},
+        {"name": "audit_md_exists", "description": "audit.md is present in outputs/"},
+        {"name": "audit_json_valid", "description": "audit.json parses as valid JSON"},
+        {"name": "verdict_is_positive", "description": "audit.json.verdict is 'verified' or 'verified-with-caveats'; not a rejection"},
+        {"name": "K_equals_7", "description": "Reported K is 7"},
+        {"name": "depth_equals_3", "description": "Reported tree depth is 3"},
+        {"name": "leaves_are_clean", "description": "Leaf audit reports only leaves in {1, x, y}"},
+        {"name": "positive_reals_verified", "description": "Numerical agreement on positive-real domain is within 1e-10"},
+        {"name": "branch_cut_addressed", "description": "Report explicitly discusses the negative-real-axis branch cut or principal-branch restriction (not silently ignored)"},
+        {"name": "domain_restriction_documented", "description": "audit.md calls out that verification is valid on positive reals / principal branch, not a blanket claim"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "reject-wrong-claim",
+      "prompt": "Audit this EML tree: `eml(x, 1)`. My claim is that it computes sin(x). Please verify, and if the claim is wrong, give me a clear numerical mismatch report with worst-case sample points. Save audit.json and audit.md. Use cmath for reference evaluation.",
+      "expected_output": "audit.json with verdict='numerical-mismatch', K=3, shape valid but max_abs_diff is large. Report identifies that eml(x,1)=exp(x), not sin(x), with example points where they disagree.",
+      "files": [],
+      "assertions": [
+        {"name": "audit_json_exists", "description": "audit.json is present in outputs/"},
+        {"name": "audit_md_exists", "description": "audit.md is present in outputs/"},
+        {"name": "audit_json_valid", "description": "audit.json parses as valid JSON"},
+        {"name": "verdict_is_mismatch", "description": "audit.json.verdict is 'numerical-mismatch' (rejects the false claim); not 'verified'"},
+        {"name": "shape_is_valid", "description": "Shape audit separately reports K=3, depth=1, leaves clean — the tree is structurally fine, only the claim is wrong"},
+        {"name": "max_diff_is_large", "description": "max_abs_diff is substantially above tolerance (indicating genuine mismatch, not rounding)"},
+        {"name": "identifies_actual_function", "description": "Report correctly notes that eml(x,1) computes exp(x), not sin(x)"},
+        {"name": "worst_case_sample_given", "description": "Report lists at least one concrete x value where tree and reference disagree, with both values shown"}
+      ]
+    }
+  ]
+}

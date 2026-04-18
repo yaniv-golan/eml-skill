@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: "eml-skill"
+message: >-
+  If you use this software, please cite both it and the underlying paper
+  by Andrzej Odrzywołek that introduced the EML operator (see the
+  `references` block below).
+type: software
+authors:
+  - family-names: Golan
+    given-names: Yaniv
+    email: yaniv@golan.name
+repository-code: "https://github.com/yaniv-golan/eml-skill"
+license: MIT
+keywords:
+  - elementary functions
+  - symbolic computation
+  - computer algebra
+  - principal branch
+  - complex analysis
+  - reverse polish notation
+  - symbolic regression
+  - agent skills
+references:
+  - type: article
+    title: "All elementary functions from a single binary operator"
+    authors:
+      - family-names: Odrzywołek
+        given-names: Andrzej
+    year: 2026
+    url: "https://arxiv.org/abs/2603.21852"
+    identifiers:
+      - type: other
+        value: "arXiv:2603.21852"
